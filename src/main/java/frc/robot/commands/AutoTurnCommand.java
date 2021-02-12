@@ -5,18 +5,30 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
 
 public class AutoTurnCommand extends CommandBase {
   /** Creates a new AutoTurnCommand. */
-  public AutoTurnCommand(MyDriveTrain driveTrain) {
+
+  MyDriveTrain locDriveTrain;
+  Double locRSpeed = 0.0;
+  Double initialAngle = 0.0;
+  Double locAngle = 0.0;        //angle in degrees
+
+  public AutoTurnCommand(MyDriveTrain driveTrain, double rSpeed, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
+    locDriveTrain = driveTrain;
+    locRSpeed = rSpeed;
+    locAngle = angle;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
