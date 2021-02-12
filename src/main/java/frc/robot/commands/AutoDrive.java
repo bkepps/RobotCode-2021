@@ -51,6 +51,5 @@ public class AutoDrive extends CommandBase {
       return true;
     }
     return false;
-
   }
 }
