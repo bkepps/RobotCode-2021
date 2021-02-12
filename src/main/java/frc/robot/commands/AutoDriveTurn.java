@@ -8,6 +8,9 @@ import frc.robot.subsystems.MyDriveTrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+// Travels set distance while turning at a certain speed. Way of turning without
+// rotation sensing, or driving in graceful arcs.
+
 public class AutoDriveTurn extends CommandBase {
   
   MyDriveTrain locDriveTrain;
