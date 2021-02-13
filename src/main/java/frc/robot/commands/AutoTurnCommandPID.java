@@ -12,10 +12,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 
-public class AutoTurnCommand extends CommandBase {
-  /** Creates a new AutoTurnCommand. */
+public class AutoTurnCommandPID extends CommandBase {
+  /** Creates a new AutoTurnCommandPID. */
 
   MyDriveTrain locDriveTrain;
   Double locRSpeed = 0.0;
@@ -25,12 +26,22 @@ public class AutoTurnCommand extends CommandBase {
   AHRS ahrs;
   double rotateToAngleRate;
 
-  public AutoTurnCommand(MyDriveTrain driveTrain, double rSpeed, double angle) {
+  //set PID gains
+  double kP = 0.3;
+  double kI = 0.0;
+  double kD = 0.0;
+  // tolerance for error in PID
+  static final double kToleranceDegrees = 2.0f;
+  // Creates a PIDController with gains kP, kI, and kD
+  PIDController pid = new PIDController(kP, kI, kD);
+
+  public AutoTurnCommandPID(MyDriveTrain driveTrain, double rSpeed, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
     locDriveTrain = driveTrain;
     locRSpeed = rSpeed;
     locAngle = angle;
+
 
     //try to set up connection to NavX, otherwise throw an error
     try {
@@ -47,11 +58,14 @@ public class AutoTurnCommand extends CommandBase {
   @Override
   public void initialize() {
     ahrs.reset();
+    pid.setSetpoint(locAngle);
+    pid.setTolerance(kToleranceDegrees);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    pid.calculate(ahrs.getAngle());
     locDriveTrain.drive(0.0, locRSpeed);
   }
 
@@ -62,7 +76,7 @@ public class AutoTurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (ahrs.getAngle() >= locAngle){
+    if (pid.atSetpoint()){
       return true;
     }
     return false;
