@@ -9,6 +9,7 @@ package frc.robot.commands;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,16 +25,11 @@ public class AutoTurnCommandPID extends CommandBase {
   Double locAngle = 0.0;        //angle to rotate to in degrees
   
   AHRS ahrs;
-  double rotateToAngleRate;
 
-  //set PID gains
-  double kP = 0.3;
-  double kI = 0.0;
-  double kD = 0.0;
   // tolerance for error in PID
   static final double kToleranceDegrees = 2.0f;
   // Creates a PIDController with gains kP, kI, and kD
-  PIDController pid = new PIDController(kP, kI, kD);
+  PIDController pid = new PIDController(driveTrain.kRotP, driveTrain.kRotI, driveTrain.kRotD);
 
   public AutoTurnCommandPID(MyDriveTrain driveTrain, double rSpeed, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -60,13 +56,13 @@ public class AutoTurnCommandPID extends CommandBase {
     ahrs.reset();
     pid.setSetpoint(locAngle);
     pid.setTolerance(kToleranceDegrees);
+    pid.enableContinuousInput(-180, 180);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pid.calculate(ahrs.getAngle());
-    locDriveTrain.drive(0.0, locRSpeed);
+    locDriveTrain.drive(0.0, pid.calculate(ahrs.getAngle()));
   }
 
   // Called once the command ends or is interrupted.
@@ -76,9 +72,6 @@ public class AutoTurnCommandPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (pid.atSetpoint()){
-      return true;
-    }
-    return false;
+    return pid.atSetpoint();
   }
 }
