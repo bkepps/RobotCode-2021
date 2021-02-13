@@ -16,9 +16,9 @@ public class MainAutoCommand extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new AutoDrive(myDriveTrain, 0.3, 5.6));
-    addCommands(new AutoTurnCommand(myDriveTrain, 0.3, 180));
+    addCommands(new AutoTurnCommand(myDriveTrain, 0.3, 180.0));
     addCommands(new AutoDrive(myDriveTrain, 0.3, 5.6));
-    addCommands(new AutoTurnCommandPID(myDriveTrain, 0.3, 180));
+    addCommands(new AutoTurnCommandPID(myDriveTrain, 180.0));
     addCommands(new AutoDrive(myDriveTrain, 0.3, 5.6));
   }
 }

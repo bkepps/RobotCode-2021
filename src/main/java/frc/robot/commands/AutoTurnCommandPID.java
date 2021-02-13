@@ -29,15 +29,16 @@ public class AutoTurnCommandPID extends CommandBase {
   // tolerance for error in PID -- the closer this is to 0 the longer turning will take
   static final double kToleranceDegrees = 2.0f;
   // Creates a PIDController with gains kP, kI, and kD
+  // more info on PID control https://frc-pdr.readthedocs.io/en/latest/control/pid_control.html
   PIDController pid = new PIDController(driveTrain.kRotP, driveTrain.kRotI, driveTrain.kRotD);
 
-  //Rotate to angle "angle" at speed "rSpeed"
+  //Rotate to angle "angle"
+  //speed controled by "Constants.driveTrain.kRotP" and distance from target
   //uses a PID loop to hopefully make it more accurate
-  public AutoTurnCommandPID(MyDriveTrain driveTrain, double rSpeed, double angle) {
+  public AutoTurnCommandPID(MyDriveTrain driveTrain, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
     locDriveTrain = driveTrain;
-    locRSpeed = rSpeed;
     locAngle = angle;
 
 
@@ -58,7 +59,7 @@ public class AutoTurnCommandPID extends CommandBase {
     //initialize NavX
     ahrs.reset();
 
-    //initialize PID loop
+    //initialize PID
     pid.setSetpoint(locAngle);
     pid.setTolerance(kToleranceDegrees);
     pid.enableContinuousInput(-180, 180);

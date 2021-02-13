@@ -64,9 +64,6 @@ public class AutoTurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (ahrs.getAngle() >= locAngle){
-      return true;
-    }
-    return false;
+    return (ahrs.getAngle() >= locAngle);
   }
 }
