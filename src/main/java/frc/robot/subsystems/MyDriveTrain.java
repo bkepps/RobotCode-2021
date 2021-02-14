@@ -49,12 +49,13 @@ public class MyDriveTrain extends SubsystemBase {
     ahrs.reset();
   }
 
+  /**drive, but speed is limited to Constants.drivetrain.max/minAutoSpeed */
   public void drive(double speed, double rotation){
     driveSys.arcadeDrive(MathUtil.clamp(speed, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed),
                           MathUtil.clamp(rotation, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed));
   }
 
-  // drive without max/minAutoSpeed limits
+  /** drive without max/minAutoSpeed limits*/
   public void teleDrive(double speed, double rotation){
     driveSys.arcadeDrive(speed, rotation);
   }

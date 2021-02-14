@@ -13,6 +13,12 @@ import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
+
+/** Rotate to angle "angle"
+ speed controled by PID which uses "Constants.driveTrain.kRotP" and distance from target to find speed
+ speed also limited by minAutoSpeed and MaxAutoSpeed
+ uses a PID loop to hopefully make it more accurate
+*/
 public class AutoTurnCommandPID extends CommandBase {
   /** Creates a new AutoTurnCommandPID. */
 
@@ -28,10 +34,6 @@ public class AutoTurnCommandPID extends CommandBase {
   // more info on PID control https://frc-pdr.readthedocs.io/en/latest/control/pid_control.html
   PIDController pid = new PIDController(driveTrain.kRotP, driveTrain.kRotI, driveTrain.kRotD);
 
-  //Rotate to angle "angle"
-  //speed controled by PID which uses "Constants.driveTrain.kRotP" and distance from target to find speed
-  //speed also limited by minAutoSpeed and MaxAutoSpeed
-  //uses a PID loop to hopefully make it more accurate
   public AutoTurnCommandPID(MyDriveTrain DriveTrain, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(DriveTrain);
