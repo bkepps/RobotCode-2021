@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -21,7 +22,8 @@ public class AutoTurnCommandPID extends CommandBase {
   Double locAngle = 0.0;        //angle to rotate to in degrees
 
   // tolerance for error in PID -- the closer this is to 0 the longer turning will take
-  static final double kToleranceDegrees = 2.0f;
+  static final double kTolerancePos = 5;
+  static final double kToleranceVel = 2;
   // Creates a PIDController with gains kP, kI, and kD
   // more info on PID control https://frc-pdr.readthedocs.io/en/latest/control/pid_control.html
   PIDController pid = new PIDController(driveTrain.kRotP, driveTrain.kRotI, driveTrain.kRotD);
@@ -40,11 +42,9 @@ public class AutoTurnCommandPID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    initialAngle = locDriveTrain.getHeading();
-
     //initialize PID
-    pid.setSetpoint(locAngle);
-    pid.setTolerance(kToleranceDegrees);
+    pid.setSetpoint(locAngle + locDriveTrain.getHeading());
+    pid.setTolerance(kTolerancePos, kToleranceVel);
     pid.enableContinuousInput(-180, 180);
   }
 
@@ -52,7 +52,8 @@ public class AutoTurnCommandPID extends CommandBase {
   @Override
   public void execute() {
     //rotate at speed given by the PID loop
-    locDriveTrain.drive(0.0, pid.calculate(locDriveTrain.getHeading() - initialAngle));
+    ;
+    locDriveTrain.drive(0.0, MathUtil.clamp(pid.calculate(locDriveTrain.getHeading()), -10, 10));
   }
 
   // Called once the command ends or is interrupted.
