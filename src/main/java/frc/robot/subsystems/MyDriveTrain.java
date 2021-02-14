@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -49,7 +50,13 @@ public class MyDriveTrain extends SubsystemBase {
   }
 
   public void drive(double speed, double rotation){
-    driveSys.arcadeDrive(speed,rotation);
+    driveSys.arcadeDrive(MathUtil.clamp(speed, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed),
+                          MathUtil.clamp(rotation, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed));
+  }
+
+  // drive without max/minAutoSpeed limits
+  public void teleDrive(double speed, double rotation){
+    driveSys.arcadeDrive(speed, rotation);
   }
 
   public double getEncoderPosition()

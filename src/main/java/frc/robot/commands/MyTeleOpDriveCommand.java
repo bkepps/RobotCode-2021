@@ -31,7 +31,7 @@ public class MyTeleOpDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    locDriveTrain.drive(locDriverJoyStick.getY(GenericHID.Hand.kLeft)*Constants.driveTrain.speedMult,
+    locDriveTrain.teleDrive(locDriverJoyStick.getY(GenericHID.Hand.kLeft)*Constants.driveTrain.speedMult,
                         locDriverJoyStick.getX(GenericHID.Hand.kRight)*Constants.driveTrain.rotMult);
   }
 

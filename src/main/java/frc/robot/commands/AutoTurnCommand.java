@@ -7,6 +7,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
 
 public class AutoTurnCommand extends CommandBase {
@@ -17,10 +19,10 @@ public class AutoTurnCommand extends CommandBase {
   Double initialAngle = 0.0;
   Double locAngle = 0.0;        //angle to rotate to in degrees
 
-  public AutoTurnCommand(MyDriveTrain driveTrain, double rSpeed, double angle) {
+  public AutoTurnCommand(MyDriveTrain DriveTrain, double rSpeed, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
-    locDriveTrain = driveTrain;
+    addRequirements(DriveTrain);
+    locDriveTrain = DriveTrain;
     locRSpeed = rSpeed;
     locAngle = angle;
   }

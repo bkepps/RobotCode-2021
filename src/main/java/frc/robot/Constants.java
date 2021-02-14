@@ -29,6 +29,9 @@ public final class Constants {
         public static final double kRotP = 0.3;
         public static final double kRotI = 0.0;
         public static final double kRotD = 0.0;  
+
+        public static final double maxAutoSpeed = 0.8;
+        public static final double minAutoSpeed = -0.8;
     }
 
     public static final class intake {

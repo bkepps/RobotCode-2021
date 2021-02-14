@@ -29,12 +29,13 @@ public class AutoTurnCommandPID extends CommandBase {
   PIDController pid = new PIDController(driveTrain.kRotP, driveTrain.kRotI, driveTrain.kRotD);
 
   //Rotate to angle "angle"
-  //speed controled by "Constants.driveTrain.kRotP" and distance from target
+  //speed controled by PID which uses "Constants.driveTrain.kRotP" and distance from target to find speed
+  //speed also limited by minAutoSpeed and MaxAutoSpeed
   //uses a PID loop to hopefully make it more accurate
-  public AutoTurnCommandPID(MyDriveTrain driveTrain, double angle) {
+  public AutoTurnCommandPID(MyDriveTrain DriveTrain, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
-    locDriveTrain = driveTrain;
+    addRequirements(DriveTrain);
+    locDriveTrain = DriveTrain;
     locAngle = angle;
 
   }
@@ -51,8 +52,8 @@ public class AutoTurnCommandPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //rotate at speed given by the PID loop
-    locDriveTrain.drive(0.0, MathUtil.clamp(pid.calculate(locDriveTrain.getHeading()), -10, 10));
+    // rotate at speed given by the PID loop, but limit speed to AutoSpeed limits
+    locDriveTrain.drive(0.0, pid.calculate(locDriveTrain.getHeading()));
   }
 
   // Called once the command ends or is interrupted.
