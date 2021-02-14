@@ -6,13 +6,8 @@
 
 package frc.robot.commands;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 
 public class AutoTurnCommand extends CommandBase {
   /** Creates a new AutoTurnCommand. */
@@ -21,9 +16,6 @@ public class AutoTurnCommand extends CommandBase {
   Double locRSpeed = 0.0;
   Double initialAngle = 0.0;
   Double locAngle = 0.0;        //angle to rotate to in degrees
-  
-  AHRS ahrs;
-  double rotateToAngleRate;
 
   public AutoTurnCommand(MyDriveTrain driveTrain, double rSpeed, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -31,22 +23,12 @@ public class AutoTurnCommand extends CommandBase {
     locDriveTrain = driveTrain;
     locRSpeed = rSpeed;
     locAngle = angle;
-
-    //try to set up connection to NavX, otherwise throw an error
-    try {
-      /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
-      /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
-      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-      ahrs = new AHRS(SPI.Port.kMXP); 
-    } catch (RuntimeException ex ) {
-      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
-    }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    ahrs.reset();
+    initialAngle = locDriveTrain.getHeading();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -64,6 +46,6 @@ public class AutoTurnCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (ahrs.getAngle() >= locAngle);
+    return ((locDriveTrain.getHeading() - initialAngle) >= locAngle);
   }
 }

@@ -3,17 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 
 // example code from https://pdocs.kauailabs.com/navx-mxp/examples/rotate-to-angle-2/ is used here
+// also from https://docs.wpilib.org/en/latest/docs/software/advanced-controls/controllers/pidcontroller.html
 
 package frc.robot.commands;
-
-import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.driveTrain;
 import frc.robot.subsystems.MyDriveTrain;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.SPI;
 
 public class AutoTurnCommandPID extends CommandBase {
   /** Creates a new AutoTurnCommandPID. */
@@ -22,9 +19,6 @@ public class AutoTurnCommandPID extends CommandBase {
   Double locRSpeed = 0.0;
   Double initialAngle = 0.0;
   Double locAngle = 0.0;        //angle to rotate to in degrees
-  
-  // NavX class thing
-  AHRS ahrs;
 
   // tolerance for error in PID -- the closer this is to 0 the longer turning will take
   static final double kToleranceDegrees = 2.0f;
@@ -41,23 +35,12 @@ public class AutoTurnCommandPID extends CommandBase {
     locDriveTrain = driveTrain;
     locAngle = angle;
 
-
-    //try to set up connection to NavX, otherwise throw an error
-    try {
-      /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
-      /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
-      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-      ahrs = new AHRS(SPI.Port.kMXP); 
-    } catch (RuntimeException ex ) {
-      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
-    }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //initialize NavX
-    ahrs.reset();
+    initialAngle = locDriveTrain.getHeading();
 
     //initialize PID
     pid.setSetpoint(locAngle);
@@ -69,7 +52,7 @@ public class AutoTurnCommandPID extends CommandBase {
   @Override
   public void execute() {
     //rotate at speed given by the PID loop
-    locDriveTrain.drive(0.0, pid.calculate(ahrs.getAngle()));
+    locDriveTrain.drive(0.0, pid.calculate(locDriveTrain.getHeading() - initialAngle));
   }
 
   // Called once the command ends or is interrupted.

@@ -10,12 +10,18 @@ import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
+import com.kauailabs.navx.frc.AHRS;
 
 public class MyDriveTrain extends SubsystemBase {
   /** Creates a new MyDriveTrain. */
   private final DifferentialDrive driveSys;
   CANSparkMax m_frontLeft;
+
+  // NavX class thing
+  AHRS ahrs;
 
   public MyDriveTrain() {
     m_frontLeft = new CANSparkMax(Constants.CANId.kDriveL1, MotorType.kBrushless);
@@ -30,6 +36,16 @@ public class MyDriveTrain extends SubsystemBase {
 
     driveSys = new DifferentialDrive(leftGroup, rightGroup);
 
+    //try to set up connection to NavX, otherwise throw an error
+    try {
+      /* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
+      /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+      /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+    ahrs = new AHRS(SPI.Port.kMXP); 
+    } catch (RuntimeException ex ) {
+        DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+    }
+    ahrs.reset();
   }
 
   public void drive(double speed, double rotation){
@@ -39,6 +55,10 @@ public class MyDriveTrain extends SubsystemBase {
   public double getEncoderPosition()
   {
     return m_frontLeft.getEncoder().getPosition();
+  }
+
+  public double getHeading(){
+    return ahrs.getAngle();
   }
 
   @Override
