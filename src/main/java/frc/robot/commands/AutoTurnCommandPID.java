@@ -52,7 +52,6 @@ public class AutoTurnCommandPID extends CommandBase {
   @Override
   public void execute() {
     //rotate at speed given by the PID loop
-    ;
     locDriveTrain.drive(0.0, MathUtil.clamp(pid.calculate(locDriveTrain.getHeading()), -10, 10));
   }
 
