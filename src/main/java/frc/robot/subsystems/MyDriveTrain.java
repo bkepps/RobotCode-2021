@@ -61,6 +61,10 @@ public class MyDriveTrain extends SubsystemBase {
     return ahrs.getAngle();
   }
 
+  public void resetHeading(){
+    ahrs.reset();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
