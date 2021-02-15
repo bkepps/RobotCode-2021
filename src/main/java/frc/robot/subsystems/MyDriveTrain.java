@@ -51,13 +51,22 @@ public class MyDriveTrain extends SubsystemBase {
 
   /**drive, but speed is limited to Constants.drivetrain.max/minAutoSpeed */
   public void drive(double speed, double rotation){
-    driveSys.arcadeDrive(MathUtil.clamp(speed, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed),
-                          MathUtil.clamp(rotation, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed));
+    this.drive(speed, rotation, true);
   }
 
-  /** drive without max/minAutoSpeed limits*/
-  public void teleDrive(double speed, double rotation){
-    driveSys.arcadeDrive(speed, rotation);
+  /** drive without max/minAutoSpeed limits
+   * @param speed double from -1 to 1
+   * @param rotation double from -1 to 1
+   * @param limits false if speed and rotation shouldn't be limited to Constants.drivetrain.min/maxAutospeed.
+   * --Defaults to true
+  */
+  public void drive(double speed, double rotation, Boolean limits){
+    if (limits) {
+      driveSys.arcadeDrive(MathUtil.clamp(speed, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed),
+        MathUtil.clamp(rotation, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed));
+    } else {
+      driveSys.arcadeDrive(speed, rotation);
+    }
   }
 
   public double getEncoderPosition()
