@@ -49,9 +49,11 @@ public class MyDriveTrain extends SubsystemBase {
     ahrs.reset();
   }
 
-  /**drive, but speed is limited to Constants.drivetrain.max/minAutoSpeed */
+  /**drive, but speed is limited to Constants.drivetrain.max/minAutoSpeed
+   * squaredInputs is set to false
+   */
   public void drive(double speed, double rotation){
-    this.drive(speed, rotation, true);
+    this.drive(speed, rotation, true, false);
   }
 
   /** drive without max/minAutoSpeed limits
@@ -59,13 +61,14 @@ public class MyDriveTrain extends SubsystemBase {
    * @param rotation double from -1 to 1
    * @param limits false if speed and rotation shouldn't be limited to Constants.drivetrain.min/maxAutospeed.
    * --Defaults to true
+   * @param squaredInputs whether or not arcadeDrive() squares it's inputs
   */
-  public void drive(double speed, double rotation, Boolean limits){
+  public void drive(double speed, double rotation, Boolean limits, Boolean squaredInputs){
     if (limits) {
       driveSys.arcadeDrive(MathUtil.clamp(speed, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed),
-        MathUtil.clamp(rotation, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed));
+        MathUtil.clamp(rotation, Constants.driveTrain.minAutoSpeed, Constants.driveTrain.maxAutoSpeed), squaredInputs);
     } else {
-      driveSys.arcadeDrive(speed, rotation);
+      driveSys.arcadeDrive(speed, rotation, squaredInputs);
     }
   }
 
