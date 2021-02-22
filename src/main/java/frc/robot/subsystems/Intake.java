@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.RunOutake;
 
 public class Intake extends SubsystemBase {
   /**
@@ -42,16 +41,5 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run. why? idk
-  }
-
-/**
-   * Creates a new RunOutake.
-   *
-   * @param runOutake TODO
-   */
-  public void RunOutake(RunOutake runOutake) {
-    runOutake.m_subsystem = this;
-    // Use addRequirements() here to declare subsystem dependencies.
-    runOutake.addRequirements(this);
   }
 }
