@@ -22,7 +22,7 @@ public class MyDriveTrain extends SubsystemBase {
   CANSparkMax m_frontLeft;
 
   // NavX class thing
-  AHRS ahrs;
+  private AHRS ahrs;
 
   public MyDriveTrain() {
     m_frontLeft = new CANSparkMax(Constants.CANId.kDriveL1, MotorType.kBrushless);
